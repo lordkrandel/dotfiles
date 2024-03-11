@@ -1,0 +1,89 @@
+# If not running interactively, don't do anything
+[[ $- != *i* ]] && return
+
+PS1='\n\[\e[0;32m\]$(__ocli_ps1) $(__git_ps1 "[%s]") \[\033[0m\]\w \$ '
+[[ "$(whoami)" = "root" ]] && return
+
+[[ -z "$FUNCNEST" ]] && export FUNCNEST=100          # limits recursive functions, see 'man bash'
+
+## Use the up and down arrow keys for finding a command in history
+## (you can write some initial letters of the command first).
+bind '"\e[A":history-search-backward'
+bind '"\e[B":history-search-forward'
+
+function colorgrid( )
+{
+    iter=16
+    while [ $iter -lt 52 ]
+    do
+        second=$[$iter+36]
+        third=$[$second+36]
+        four=$[$third+36]
+        five=$[$four+36]
+        six=$[$five+36]
+        seven=$[$six+36]
+        if [ $seven -gt 250 ];then seven=$[$seven-251]; fi
+
+        echo -en "\033[38;5;$(echo $iter)m█ "
+        printf "%03d" $iter
+        echo -en "   \033[38;5;$(echo $second)m█ "
+        printf "%03d" $second
+        echo -en "   \033[38;5;$(echo $third)m█ "
+        printf "%03d" $third
+        echo -en "   \033[38;5;$(echo $four)m█ "
+        printf "%03d" $four
+        echo -en "   \033[38;5;$(echo $five)m█ "
+        printf "%03d" $five
+        echo -en "   \033[38;5;$(echo $six)m█ "
+        printf "%03d" $six
+        echo -en "   \033[38;5;$(echo $seven)m█ "
+        printf "%03d" $seven
+
+        iter=$[$iter+1]
+        printf '\r\n'
+    done
+}
+
+__ocli_ps1 ()
+{
+    local workspace=`jq --arg pwd $PWD '.[] | objects | select(has("path")) | select(.path != null) | select(.path | inside($pwd)).last_used' ~/.config/odev/projects.json --raw-output`
+    if [[ ! -z ${workspace// } ]]
+    then
+        printf -- "{"
+        printf -- $workspace
+        printf -- "}"
+    fi
+    return 0
+}
+# ---------------------------------------------------------
+
+export EDITOR="nvim"
+export LC_COLLATE="C"
+LS_COLORS=$LS_COLORS:'ow=1;34:'
+export LS_COLORS
+export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
+shopt -s autocd
+TZ='Europe/Brussels'
+export TZ
+
+
+clear
+eval $(keychain --eval --quiet github_odoo)
+
+clear
+# Completions -------------------------------------------
+[[ -f ~/.bash_aliases   ]] && . ~/.bash_aliases
+eval "$(thefuck --alias)"
+[[ -f ~/.fzf.bash       ]] && source ~/.fzf.bash
+[[ -f ~/bin/fzf-tab-completion/bash/fzf-tab-completion.bash ]] && source ~/bin/fzf-tab-completion/bash/fzf-tab-completion.bash
+source /usr/share/fzf-tab-completion/bash/fzf-bash-completion.sh
+bind -x '"\t": fzf_bash_completion'
+
+. /home/odoo/.bash_completions/ocli.sh
+. /usr/share/git/completion/git-prompt.sh
+
+# -------------------------------------------------------
+
+echo ''
+starter
+echo ''

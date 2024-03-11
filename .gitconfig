@@ -1,0 +1,21 @@
+[user]
+	name = Paolo Gatti (pgi)
+	email = pgi@odoo.com
+[core]
+	editor = nvim
+[pull]
+	rebase = true
+	autoSetupRemote = true
+	default = current
+	autoSetupRemote = true
+[alias]
+    amend = commit --amend --no-edit
+    logg = log --oneline
+[log]
+	abbrevCommit = true
+[push]
+	autoSetupRemote = true
+	default = current
+	autoSetupRemote = true
+[init]
+	defaultBranch = main

@@ -1,0 +1,4 @@
+options.default_width = 20
+options.encoding = "utf-8"
+options.csv_dialect = "unix"
+options.csv_lineterminator = '\n'

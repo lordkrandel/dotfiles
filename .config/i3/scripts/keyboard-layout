@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+echo $(/usr/bin/xkblayout-state print '⌨️ %s')
