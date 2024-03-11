@@ -9,8 +9,7 @@
 	default = current
 	autoSetupRemote = true
 [alias]
-    amend = commit --amend --no-edit
-    logg = log --oneline
+	amend = commit --amend --no-edit
 [log]
 	abbrevCommit = true
 [push]
