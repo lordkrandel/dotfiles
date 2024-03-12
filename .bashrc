@@ -13,9 +13,8 @@ __ocli_ps1 ()
     local workspace=`jq --arg pwd $PWD '.[] | objects | select(has("path")) | select(.path != null) | select(.path | inside($pwd)).last_used' ~/.config/odev/projects.json --raw-output`
     if [[ ! -z ${workspace// } ]]
     then
-        printf -- "\e[0mworkspace=\e[0;33m"
+        printf -- "\e[0mworkspace \e[0;33m"
         printf -- $workspace
-        printf -- ", "
     fi
     return 0
 }
@@ -25,15 +24,15 @@ __git_ps1 ()
     then
         local repo_path=`git rev-parse --show-toplevel | xargs realpath -s --relative-base=$HOME`
         local branch_name=`git rev-parse --abbrev-ref HEAD`
-        printf -- "\e[0mrepo=\e[0;33m"
+        printf -- "\e[0mrepo \e[0;33m"
         printf -- ${repo_path/./\~}
-        printf -- ", "
-        printf -- "\e[0mbranch=\e[0;33m"
+        printf -- "\n"
+        printf -- "\e[0mbranch \e[0;33m"
         printf -- $branch_name
     fi
 }
 
-PS1='\n[\[\e[0;32m\]$(__ocli_ps1)$(__git_ps1)]\n\[\033[0m\]\w \$ '
+PS1='\n\[\e[0;32m\]$(__ocli_ps1)\n$(__git_ps1)\n\[\033[0m\]\w \$ '
 
 # ---------------------------------------------------------
 
