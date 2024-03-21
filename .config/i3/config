@@ -7,8 +7,8 @@ set $mod Mod4
 
 # Workspaces
 set $ws1 "1:  🌍💬  "
-set $ws2 "2:  ⌨️   "
-set $ws3 "3:  ✉️   "
+set $ws2 "2:  ⌨  "
+set $ws3 "3:  📧𝄢  "
 set $ws4 "4:  🔑  "
 set $ws5 "5:  🖌️  "
 set $ws6 "6:  📂  "
@@ -22,6 +22,7 @@ assign [class="(?i)firefox"]      $ws1
 assign [class="(?i)discord"]      $ws1
 assign [class="(?i)kitty"]        $ws2
 assign [class="(?i)Thunderbird"]  $ws3
+assign [class="(?i)Spotify"]      $ws3
 assign [class="(?i)keepassxc"]    $ws4
 assign [class="(?i)gimp"]         $ws5
 assign [class="Thunar"]           $ws6
@@ -131,8 +132,9 @@ bindsym $mod+Shift+r              restart
 bindsym $mod+r                    mode "resize"
 
 # Custom Keys
-bindsym Print                     exec scrot $HOME/images/%Y%m%d%T_screenshot.png -e 'gimp $f'
-bindsym $mod+l                    exec i3lock -i ~/images/walruslock.png
+bindsym Print                     exec scrot $HOME/images/%Y%m%d_%H%M%S_screenshot.png -e 'gimp $f'
+bindsym $mod+l                    exec i3lock -e -i ~/images/lockerrot.png
+# bindsym $mod+l                  exec i3lock -e -i ~/images/deathlock2.png
 bindsym $mod+d                    exec rofi -terminal kitty -modi drun -show drun -config ~/.config/rofi/config.rasi
 bindsym $mod+Shift+p              exec ~/.config/i3/scripts/power-profiles
 bindsym $mod+q                    exec ~/.config/i3/scripts/powermenu
@@ -151,20 +153,25 @@ bindsym XF86AudioPrev             exec playerctl previous
 bindsym XF86MonBrightnessUp       exec xbacklight +5 && notify-send "Brightness - $(xbacklight -get | cut -d '.' -f 1)%"
 bindsym XF86MonBrightnessDown     exec xbacklight -5 && notify-send "Brightness - $(xbacklight -get | cut -d '.' -f 1)%"
 
+# Specific window configa
+for_window [class="kitty" title="ncspot"] floating enable, move position 1000 400, resize set 35 ppt 35 ppt
+
 # Startup
 exec --no-startup-id nitrogen --restore
 exec --no-startup-id kitty
-exec --no-startup-id firefox
+exec --no-startup-id firefox-developer-edition
 exec --no-startup-id dropbox
 exec --no-startup-id thunar
 exec --no-startup-id thunderbird
-exec --no-startup-id sleep 2 && discord
-exec --no-startup-id blueberry-tray
 exec --no-startup-id nm-applet
 exec --no-startup-id dbus-launch dunst --config ~/.config/dunst/dunstrc
 exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
-exec --no-startup-id ~/.screenlayout/monitor.sh
 exec --no-startup-id greenclip daemon
 exec --no-startup-id maestral start
+exec --no-startup-id ~/.screenlayout/monitor.sh
+exec --no-startup-id blueman-applet
+exec --no-startup-id sleep 2 && discord
+
+exec --no-startup-id sleep 10 && autokey-gtk
 exec_always --no-startup-id picom -b
 exec_always --no-startup-id setxkbmap -model pc105 -layout it,us,fr -option grp:alt_space_toggle

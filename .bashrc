@@ -32,35 +32,32 @@ __git_ps1 ()
     fi
 }
 
-PS1='\n\[\e[0;32m\]$(__ocli_ps1)\n$(__git_ps1)\n\[\033[0m\]\w \$ '
 
 # ---------------------------------------------------------
 
+export BROWSER="firefox-developer-edition"
 export EDITOR="nvim"
 export LC_COLLATE="C"
-LS_COLORS=$LS_COLORS:'ow=1;34:'
-export LS_COLORS
+export LS_COLORS=$LS_COLORS:'ow=1;34:'
+export PS1='\n\[\e[0;32m\]$(__ocli_ps1)\n$(__git_ps1)\n\[\033[0m\]\w \$ '
 export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
+export TZ='Europe/Brussels'
+
 shopt -s autocd
-TZ='Europe/Brussels'
-export TZ
+
+
 
 
 clear
 eval $(keychain --eval --quiet github_odoo)
-
 clear
 
 # Completions -------------------------------------------
-[[ -f ~/.bash_aliases   ]] && . ~/.bash_aliases
 eval "$(thefuck --alias)"
-[[ -f ~/.fzf.bash       ]] && source ~/.fzf.bash
-[[ -f ~/bin/fzf-tab-completion/bash/fzf-tab-completion.bash ]] && source ~/bin/fzf-tab-completion/bash/fzf-tab-completion.bash
-source /usr/share/fzf-tab-completion/bash/fzf-bash-completion.sh
-bind -x '"\t": fzf_bash_completion'
-. $HOME/.bash_completions/ocli.sh
+source ~/.bash_aliases
+source ~/.fzf.bash
+source /usr/share/bash-completion/completions/git
+source $HOME/.bash_completions/ocli.sh
 # -------------------------------------------------------
 
-echo ''
 starter
-echo ''
