@@ -8,22 +8,37 @@
 bind '"\e[A":history-search-backward'
 bind '"\e[B":history-search-forward'
 
+__is_repo ()
+{
+    if [ -d .git ] && "$(git rev-parse --is-inside-work-tree)" = "true"
+    then
+        return 0;
+    else
+        return 1;
+    fi
+}
 __ocli_ps1 ()
 {
-    local workspace=`jq --arg pwd $PWD '.[] | objects | select(has("path")) | select(.path != null) | select(.path | inside($pwd)).last_used' ~/.config/odev/projects.json --raw-output`
-    if [[ ! -z ${workspace// } ]]
+    if __is_repo
     then
-        printf -- "\e[0mworkspace \e[0;33m"
-        printf -- $workspace
+        local workspace=`jq --arg pwd $PWD '.[] | objects | select(has("path")) | select(.path != null) | select(.path | inside($pwd)).last_used' ~/.config/odev/projects.json --raw-output`
+        if [[ ! -z ${workspace// } ]]
+        then
+            printf -- "\n"
+            printf -- "\e[0mworkspace \e[0;33m"
+            printf -- $workspace
+            printf -- "\n"
+        fi
     fi
     return 0
 }
 __git_ps1 ()
 {
-    if [[ `git rev-parse --is-inside-work-tree` == 'true' ]]
+    if __is_repo
     then
         local repo_path=`git rev-parse --show-toplevel | xargs realpath -s --relative-base=$HOME`
         local branch_name=`git rev-parse --abbrev-ref HEAD`
+        printf -- "\n"
         printf -- "\e[0mrepo \e[0;33m"
         printf -- ${repo_path/./\~}
         printf -- "\n"
@@ -39,14 +54,11 @@ export BROWSER="firefox-developer-edition"
 export EDITOR="nvim"
 export LC_COLLATE="C"
 export LS_COLORS=$LS_COLORS:'ow=1;34:'
-export PS1='\n\[\e[0;32m\]$(__ocli_ps1)\n$(__git_ps1)\n\[\033[0m\]\w \$ '
+export PS1='\[\e[0;32m\]$(__ocli_ps1)$(__git_ps1)\n\[\033[0m\]\w \$ '
 export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
 export TZ='Europe/Brussels'
 
 shopt -s autocd
-
-
-
 
 clear
 eval $(keychain --eval --quiet github_odoo)

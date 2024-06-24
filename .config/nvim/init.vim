@@ -51,7 +51,7 @@ let g:netrw_bufsettings = 'noma nomod nu nobl nowrap ro'
 set laststatus=2
 set statusline=%{expand('%:p')}\ %m%=%{getcwd()}
 
-nnoremap <A-1>      :exe 'e ' . g:cfg . '/init.vim'<CR>
+nnoremap <A-1>      :exe 'e ~/projects/dotfiles/init.vim'<CR>
 nnoremap <A-2>      :e ~/.bashrc<CR>
 nnoremap <A-3>      :e ~/.config/kitty/kitty.conf<CR>
 nnoremap <A-4>      :e ~/.config/i3/config<CR>
