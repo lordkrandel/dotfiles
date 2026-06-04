@@ -1,1 +1,1 @@
-export TERMINAL=/usr/bin/kitty
+export TERMINAL=/usr/bin/st
