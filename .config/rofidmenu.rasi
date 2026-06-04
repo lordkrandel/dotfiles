@@ -1,0 +1,69 @@
+* {
+    font:                        "Iosevka Nerd Font Mono 13";
+    background:                  Black;
+    foreground:                  Gray;
+    background-color:            Black;
+    border-color:                White;
+    text-color:                  White;
+    normal-background:           var(background);
+    normal-foreground:           var(foreground);
+    transparent:                 rgba(0, 0, 0, 0);
+    selected-normal-background:  var(background);
+    selected-normal-foreground:  rgb(255, 255, 150);
+    alternate-active-background: var(active-background);
+    alternate-active-foreground: var(active-foreground);
+    alternate-urgent-background: var(urgent-background);
+    alternate-urgent-foreground: var(urgent-foreground);
+    alternate-normal-background: var(background);
+    alternate-normal-foreground: var(foreground);
+    active-background:           var(background);
+    active-foreground:           var(foreground);
+    urgent-background:           Red;
+    urgent-foreground:           Red;
+    selected-urgent-background:  Red;
+    selected-urgent-foreground:  Red;
+    selected-active-background:  var(active-background);
+    selected-active-foreground:  var(active-foreground);
+    separatorcolor:              var(background);
+}
+
+configuration {
+    icon-theme:          "Qogir";
+    display-drun:        "Apps";
+    drun-display-format: "{name}";
+    scroll-method:       0;
+    disable-history:     false;
+    sidebar-mode:        false;
+}
+
+window {
+    anchor:     north;
+    location:   north;
+    width:      100%;
+    padding:    4px;
+    children:   [ horibox ];
+}
+horibox {
+    orientation: horizontal;
+    children:   [ prompt, entry, listview ];
+}
+listview {
+    layout:     horizontal;
+    spacing:    5px;
+    lines:      100;
+}
+entry {
+    expand:     false;
+    width:      10em;
+}
+element {
+    padding: 0px 2px;
+}
+element selected {
+    background-color: SteelBlue;
+}
+
+element-text, element-icon {
+  background-color: inherit;
+  text-color: inherit;
+}

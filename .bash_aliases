@@ -1,25 +1,129 @@
+#!/usr/bin/bash
+
+qrencode () {
+    TEMPFILE=$(mktemp)
+    trap "'rm -f $TEMPFILE'" 0 2 3 15
+    qrtool encode "$*" > $TEMPFILE
+    nohup gimp -sf $TEMPFILE &>/dev/null &
+}
+
+activate () {
+    pushd .venv$1/bin &>/dev/null
+    source activate
+    popd &>/dev/null
+}
+
+lsub () {
+    source $PROJ/lsub/.venv/bin/activate && $PROJ/lsub/lsub.py "$@"
+}
+exp() {
+
+    local FZF="fzf --ansi --border --height=40% --layout=reverse"
+    local REPO_LIST_FILE="$HOME/work/odoo_repos"
+    local REPO_NAME=$( \
+        cat "$REPO_LIST_FILE" \
+        | sed "s/odoo\///g" \
+        | $FZF --header="$REPO_LIST_FILE" --prompt="repo > " \
+    )
+    if [ -z "$REPO_NAME" ]; then
+        return 1
+    fi
+
+    local REPO_DIR="$HOME/work/$REPO_NAME"
+    (
+        cd "$REPO_DIR" >/dev/null
+        local BRANCH_REF=$( \
+            git branch --all --no-color \
+            | grep -v HEAD \
+            | sed "s/^[ *]*//g" \
+            | sed "s/remotes\/origin\///g" \
+            | sed "s/remotes\/dev\///g" \
+            | grep -Ev "^(tmp\.|staging\.)" \
+            | $FZF --tac --header="$REPO_NAME" --prompt="branch > " \
+        )
+        if [ -z "$BRANCH_REF" ]; then
+            return 1
+        fi
+        local FILE_PATH=$( \
+            git ls-tree -r --name-only "$BRANCH_REF" \
+            | $FZF --scheme=path --header="$BRANCH_REF" --prompt="file > "
+        )
+        if [ -z "$FILE_PATH" ]; then
+            return 1
+        fi
+        echo $BRANCH_REF:$REPO_DIR/$FILE_PATH
+        COMM=$(printf "execute('tabnew | Gedit %s:%s/%s')" "$BRANCH_REF" "$REPO_DIR" "$FILE_PATH")
+        nvim --server "$NVIM" --remote-expr "$COMM"
+    )
+}
+
+remake() {
+    pushd ~/bin/st &>/dev/null
+    make &>/dev/null
+    popd &>/dev/null
+}
+
+pgconn() {
+    psql -U $USER -d $USER  --field-separator=' ' --no-align --pset="footer=off" --tuples-only -c " \
+        SELECT \
+            pid, \
+            application_name \
+        FROM \
+            pg_stat_activity \
+        WHERE \
+            state='active' \
+            AND client_addr IS NULL \
+            OR client_addr = '127.0.0.1' \
+            AND application_name NOT LIKE '%psql%' \
+        ;"
+}
+
+ntab() {
+    nvim --server ~/.nvim.pipe --remote-tab $(realpath $1)
+}
+
+resetusb() {
+    local HCD="/sys/bus/pci/drivers/xhci_hcd"
+    for dev in $HCD/*:*:*.*; do
+        if [ -e "$dev" ]; then
+            local pci_id=$(basename "$dev")
+            echo "Resetting USB controller: $pci_id"
+            echo -n "$pci_id" | sudo tee $HCD/unbind > /dev/null
+            sleep 1
+            echo -n "$pci_id" | sudo tee $HCD/bind > /dev/null
+        fi
+        done
+    echo "USB controllers reset."
+}
+
+alias ask="$PROJ/ask/ask.sh $*"
+alias act="activate $*"
+alias blank="clear && clear $*"
+alias bundle="$PROJ/go_bundle/bundle $*"
 alias ccal="cal -mn 3 $*"
-alias update-discord="yes | yay -Sy discord $*"
-alias la="ls -a --color=auto --group-directories-first $*"
-alias ll="ls -al --color=auto --group-directories-first $*"
-alias activate=". ./.venv/bin/activate"
-alias lsub="~/projects/lsub.sh $*"
+alias dea="deactivate $*"
+alias dir="ll $*"
+alias kv="$PROJ/kv/kv $*"
+alias ll="eza -algo --no-permissions --group-directories-first --time-style=long-iso $*"
+alias cards="$PROJ/cards/cards $*"
+alias monitor="$PROJ/scripts/monitor.sh $*"
 alias noswap="rm ~/.local/state/nvim/swap/* $*"
-alias ocli="~/projects/ocli.sh $*"
-alias daysoff="~/projects/scripts/daysoff.py $*"
-alias pg="pgcli -d odoodb $*"
-alias pac="yes | sudo pacman -Scc && sudo pacman -Su $*"
-alias pr="~/projects/scripts/pr.sh $*"
-alias rgg="rg -in -C3 --max-depth 5 --no-heading --type=xml --type=py $*"
-alias rv="~/projects/reviewtui.sh $*"
-alias tran="~/projects/translate/traduire.py $*"
-alias starter="cd ~/projects/starter 1>/dev/null 2>/dev/null && . ./starter.sh $*"
-alias system-update="yes | sudo pacman -Sy endeavouros-keyring && sudo pacman -Syu $*"
-alias starter=". ~/projects/starter.sh $*"
-alias note="echo '$*' >> ~/notes.txt"
-alias notes="tail $* ~/notes.txt"
-alias py="ipython3 $*"
-alias reload=". ~/.bashrc $*"
+alias note="nvim +':normal! Go' +startinsert $NOTES"
+alias notes="tail $* $NOTES"
+alias is_repo="$PROJ/scripts/is_repo.py $*"
+alias rankmirrors="eos-rankmirrors -t 2"
+alias pac="(deactivate && si | sudo pacman -Sy endeavouros-keyring && si | sudo pacman -Su $* && si | sudo pacman -Scc)"
+alias pg="pgcli $*"
+alias pl="$PROJ/pl/pl $*"
+alias py="ipython $*"
 alias realias=". ~/.bash_aliases $*"
-alias v="~/projects/venv.sh $*"
-alias k="source ~/projects/scripts/k.sh"
+alias reload=". ~/.bashrc $*"
+alias rap="rg --no-heading -C 3 --type=py --type=xml $*"
+alias rgg="$PROJ/rgg/rgg.sh $*"
+alias rv="$PROJ/reviewtui/reviewtui.sh $*"
+alias si="yes S"
+alias update-discord="yay -Sy discord --noconfirm $*"
+alias update-pip="pip install --upgrade pip"
+alias tts="$PROJ/scripts/tts.sh $*"
+alias nohist="cat /dev/null > ~/.bash_history && history -c && exit"
+alias jar="$PROJ/scripts/cookiejar.sh $*"

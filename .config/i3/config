@@ -1,42 +1,61 @@
 # Base config
-font pango: Iosevka Nerd Font Mono 11
+font pango: Aporetic Sans Mono 14
 workspace_layout default
-floating_modifier $mod
-for_window [class="^.*"] border pixel 8
 set $mod Mod4
+floating_modifier $mod
 
 # Workspaces
-set $ws1 "1:  🌍💬  "
-set $ws2 "2:  ⌨  "
+set $ws1 "1:  🌍  "
+set $ws2 "2:  💬  "
 set $ws3 "3:  📧𝄢  "
-set $ws4 "4:  🔑  "
+set $ws4 "4:  ⌨  "
 set $ws5 "5:  🖌️  "
 set $ws6 "6:  📂  "
-set $ws7 "7: "
-set $ws8 "8: "
+set $ws7 "7:  🔑  "
+set $ws8 "8:  "
 set $ws9 "9: "
 set $ws10 "10: "
 
 # Assign to workspace
-assign [class="(?i)firefox"]      $ws1
-assign [class="(?i)discord"]      $ws1
-assign [class="(?i)kitty"]        $ws2
-assign [class="(?i)Thunderbird"]  $ws3
-assign [class="(?i)Spotify"]      $ws3
-assign [class="(?i)keepassxc"]    $ws4
-assign [class="(?i)gimp"]         $ws5
-assign [class="Thunar"]           $ws6
+assign [class="(?i)librewolf"]     $ws1
+assign [class="(?i)discord"]       $ws2
+assign [class="(?i)Thunderbird"]   $ws3
+assign [class="(?i)Spotify"]       $ws3
+assign [class="(?i)st"]            $ws4
+assign [class="(?i)gimp"]          $ws5
+assign [class="Thunar"]            $ws6
+assign [class="(?i)keepassxc"]     $ws7
 
-# Output to monitors
-# workspace $ws1 output VGA-0
-# workspace $ws2 output VGA-0
-# workspace $ws3 output HDMI-0
-# workspace $ws4 output HDMI-0
-# workspace $ws5 output HDMI-0
+# beep off
+exec --no-startup-id xset b off
+
+# notifications
+exec --no-startup-id dbus-launch dunst --config ~/.config/dunst/dunstrc 
+
+# tray
+exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
+exec --no-startup-id greenclip daemon
+exec --no-startup-id blueberry-tray
+exec --no-startup-id maestral start
+exec --no-startup-id nm-applet
+
+# Startup
+exec --no-startup-id nitrogen --restore
+exec --no-startup-id librewolf
+exec --no-startup-id dropbox
+exec --no-startup-id screenkey
+exec --no-startup-id thunar
+exec --no-startup-id thunderbird
+exec --no-startup-id keepassxc
+exec --no-startup-id st -e nvim --listen ~/.cache/nvim/server.pipe +terminal
+exec --no-startup-id sleep 5 && ~/projects/scripts/keyboard.sh
+exec --no-startup-id sleep 5 && autokey-gtk
+exec --no-startup-id sleep 5 && warpd
+exec --no-startup-id sleep 7 && ~/projects/scripts/discord_update_launch.sh
 
 # Taskbar
 bar {
-    font pango: Iosevka Nerd Font Mono 14
+    font pango: Aporetic Sans Mono 14
     status_command i3blocks -c ~/.config/i3/i3blocks.conf
     position bottom
     tray_output primary
@@ -53,41 +72,36 @@ bar {
     }}
 
 mode "resize" {
-    # Pressing down will grow the window's height.
-    bindsym h resize grow width 10 px or 10 ppt
-    bindsym j resize shrink width 10 px or 10 ppt
-    bindsym k resize grow height 10 px or 10 ppt
-    bindsym l resize shrink height 10 px or 10 ppt
-
-    # same bindings, but for the arrow keys
-    bindsym Left resize shrink width 5 px or 1 ppt
-    bindsym Down resize grow height 5 px or 1 ppt
-    bindsym Up resize shrink height 5 px or 1 ppt
-    bindsym Right resize grow width 5 px or 1 ppt
-
-    # back to normal: Enter or Escape
+    bindsym h     resize grow   width  5 px or 1 ppt
+    bindsym l     resize shrink width  5 px or 1 ppt
+    bindsym j     resize grow   height 5 px or 1 ppt
+    bindsym k     resize shrink height 5 px or 1 ppt
+    bindsym Left  resize grow   width  5 px or 1 ppt
+    bindsym Right resize shrink width  5 px or 1 ppt
+    bindsym Down  resize shrink height 5 px or 1 ppt
+    bindsym Up    resize grow   height 5 px or 1 ppt
     bindsym Return mode "default"
     bindsym Escape mode "default"
 }
 
 # Colors
-set $darkbluetrans       #08052b
-set $darkblue            #08052b
-set $lightblue           #5294e2
-set $urgentred           #e53935
-set $white               #ffffff
-set $black               #000000
-set $purple              #e345ff
-set $darkgrey            #383c4a
-set $grey                #b0b5bd
-set $mediumgrey          #8b8b8b
-set $yellowbrown         #e1b700
+set $darkbluetrans                #08052b
+set $darkblue                     #08052b
+set $lightblue                    #5294e2
+set $urgentred                    #e53935
+set $white                        #ffffff
+set $black                        #000000
+set $purple                       #e345ff
+set $darkgrey                     #383c4a
+set $grey                         #b0b5bd
+set $mediumgrey                   #8b8b8b
+set $yellowbrown                  #e1b700
 
-#class                   border      bground     text     indicator     child_border
-client.focused           $black      $darkblue   $white   $mediumgrey   $black
-client.unfocused         $black      $darkblue   $grey    $darkgrey     $black
-client.focused_inactive  $black      $darkblue   $grey    $black        $black
-client.urgent            $urgentred  $urgentred  $white   $yellowbrown  $black
+#class                            border      bground     text     indicator     child_border
+client.focused                    $black      $darkblue   $white   $mediumgrey   $black
+client.unfocused                  $black      $darkblue   $grey    $darkgrey     $black
+client.focused_inactive           $black      $darkblue   $grey    $black        $black
+client.urgent                     $urgentred  $urgentred  $white   $yellowbrown  $black
 
 # Workspace keys
 bindsym $mod+1                    workspace $ws1
@@ -133,10 +147,8 @@ bindsym $mod+r                    mode "resize"
 
 # Custom Keys
 bindsym Print                     exec scrot $HOME/images/%Y%m%d_%H%M%S_screenshot.png -e 'gimp $f'
-bindsym $mod+l                    exec i3lock -e -i ~/images/matrimonio.png 
-# bindsym $mod+l                    exec i3lock -e -i ~/images/lockerrot.png
-# bindsym $mod+l                  exec i3lock -e -i ~/images/deathlock2.png
-bindsym $mod+d                    exec rofi -terminal kitty -modi drun -show drun -config ~/.config/rofi/config.rasi
+bindsym $mod+l                    exec i3lock -e -i $HOME/images/wallpapers/matrimonio.png
+bindsym $mod+d                    exec rofi -terminal st -modi drun -show drun -config ~/.config/rofi/config.rasi
 bindsym $mod+Shift+p              exec ~/.config/i3/scripts/power-profiles
 bindsym $mod+q                    exec ~/.config/i3/scripts/powermenu
 bindsym $mod+p                    exec rofi -modi "clipboard:greenclip print" -show clipboard -run-command '{cmd}'
@@ -144,35 +156,12 @@ bindsym $mod+m                    exec rofi-autorandr -modi drun -show drun
 bindsym $mod+t                    exec rofi-theme-selector
 
 # System keys
-bindsym XF86AudioLowerVolume      exec pactl set-sink-volume 0 -10% && pkill -RTMIN+1 i3blocks
-bindsym XF86AudioRaiseVolume      exec pactl set-sink-volume 0 +10% && pkill -RTMIN+1 i3blocks
-bindsym XF86AudioMute             exec pactl set-sink-mute 0 toggle && pkill -RTMIN+1 i3blocks
+bindsym XF86AudioLowerVolume      exec ~/projects/volume.sh -10% && pkill -RTMIN+1 i3blocks
+bindsym XF86AudioRaiseVolume      exec ~/projects/volume.sh +10% && pkill -RTMIN+1 i3blocks
+bindsym XF86AudioMute             exec ~/projects/mute.sh && pkill -RTMIN+1 i3blocks
 bindsym XF86AudioPlay             exec playerctl play
 bindsym XF86AudioPause            exec playerctl pause
 bindsym XF86AudioNext             exec playerctl next
 bindsym XF86AudioPrev             exec playerctl previous
 bindsym XF86MonBrightnessUp       exec xbacklight +5 && notify-send "Brightness - $(xbacklight -get | cut -d '.' -f 1)%"
 bindsym XF86MonBrightnessDown     exec xbacklight -5 && notify-send "Brightness - $(xbacklight -get | cut -d '.' -f 1)%"
-
-# Specific window configa
-for_window [class="kitty" title="ncspot"] floating enable, move position 1000 400, resize set 35 ppt 35 ppt
-
-# Startup
-exec --no-startup-id nitrogen --restore
-exec --no-startup-id kitty
-exec --no-startup-id firefox-developer-edition
-exec --no-startup-id dropbox
-exec --no-startup-id thunar
-exec --no-startup-id thunderbird
-exec --no-startup-id nm-applet
-exec --no-startup-id dbus-launch dunst --config ~/.config/dunst/dunstrc
-exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
-exec --no-startup-id greenclip daemon
-exec --no-startup-id maestral start
-exec --no-startup-id ~/.screenlayout/monitor.sh
-exec --no-startup-id blueman-applet
-exec --no-startup-id sleep 2 && discord
-
-exec --no-startup-id sleep 10 && autokey-gtk
-exec_always --no-startup-id picom -b
-exec_always --no-startup-id setxkbmap -model pc105 -layout it,us,fr -option grp:alt_space_toggle

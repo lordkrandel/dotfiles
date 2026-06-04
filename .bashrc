@@ -1,75 +1,57 @@
-# If not running interactively, don't do anything
 [[ $- != *i* ]] && return
-[[ "$(whoami)" = "root" ]] && return
-[[ -z "$FUNCNEST" ]] && export FUNCNEST=100          # limits recursive functions, see 'man bash'
 
-## Use the up and down arrow keys for finding a command in history
-## (you can write some initial letters of the command first).
-bind '"\e[A":history-search-backward'
-bind '"\e[B":history-search-forward'
-
-__is_repo ()
-{
-    if [ -d .git ] && "$(git rev-parse --is-inside-work-tree)" = "true"
-    then
-        return 0;
+command_not_found_handle() {
+    # Check if the command exists in the current directory
+    if [ -f "./$1" ]; then
+        # If it exists in the current directory, execute it
+        ./$1 "${@:2}"
     else
-        return 1;
-    fi
-}
-__ocli_ps1 ()
-{
-    if __is_repo
-    then
-        local workspace=`jq --arg pwd $PWD '.[] | objects | select(has("path")) | select(.path != null) | select(.path | inside($pwd)).last_used' ~/.config/odev/projects.json --raw-output`
-        if [[ ! -z ${workspace// } ]]
-        then
-            printf -- "\n"
-            printf -- "\e[0mworkspace \e[0;33m"
-            printf -- $workspace
-            printf -- "\n"
-        fi
-    fi
-    return 0
-}
-__git_ps1 ()
-{
-    if __is_repo
-    then
-        local repo_path=`git rev-parse --show-toplevel | xargs realpath -s --relative-base=$HOME`
-        local branch_name=`git rev-parse --abbrev-ref HEAD`
-        printf -- "\n"
-        printf -- "\e[0mrepo \e[0;33m"
-        printf -- ${repo_path/./\~}
-        printf -- "\n"
-        printf -- "\e[0mbranch \e[0;33m"
-        printf -- $branch_name
+        echo "bash: $1: command not found"
+        return 127
     fi
 }
 
-
-# ---------------------------------------------------------
-
-export BROWSER="firefox-developer-edition"
-export EDITOR="nvim"
+# ENV --------------------------------------------------------------
+export BROWSER=librewolf
+export EDITOR=nvim
 export LC_COLLATE="C"
 export LS_COLORS=$LS_COLORS:'ow=1;34:'
-export PS1='\[\e[0;32m\]$(__ocli_ps1)$(__git_ps1)\n\[\033[0m\]\w \$ '
 export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
 export TZ='Europe/Brussels'
 
+# SHELL RELATED ---------------------------------------------------
 shopt -s autocd
+bind '"\e[A":history-search-backward'
+bind '"\e[B":history-search-forward'
 
-clear
-eval $(keychain --eval --quiet github_odoo)
-clear
-
-# Completions -------------------------------------------
-eval "$(thefuck --alias)"
-source ~/.bash_aliases
-source ~/.fzf.bash
+# COMPLETIONS -----------------------------------------------------
 source /usr/share/bash-completion/completions/git
-source $HOME/.bash_completions/ocli.sh
-# -------------------------------------------------------
+source /home/odoo/.fzf/shell/completion.bash
+source /usr/share/fzf-tab-completion/bash/fzf-bash-completion.sh
+bind -x '"\t": fzf_bash_completion'
 
-starter
+# FUCK YOU
+export _TYPER_STANDARD_TRACEBACK=1
+
+if [[ $(whoami) != "root" ]]; then
+
+    # FOLDERS ---------------------------------------------------------
+    export PROJ=$HOME/projects
+    export NEW=$HOME/new
+    export WORK=$HOME/work
+    export XDG_CONFIG_DIR=$HOME/.config
+    export CONFIG=$HOME/.config
+
+    # APPS ------------------------------------------------------------
+    export NOTES=$HOME/notes.md
+
+    # USER COMPLETIONS ------------------------------------------------
+    source ~/.bash_aliases
+    source ~/.fzf.bash
+    source ~/.bash_completions/ocli.sh
+
+    # USER INTERACTION ------------------------------------------------
+    source $PROJ/shellrc/shellrc.sh
+fi
+
+# uv
