@@ -30,7 +30,7 @@ assign [class="(?i)keepassxc"]     $ws7
 exec --no-startup-id xset b off
 
 # notifications
-exec --no-startup-id dbus-launch dunst --config ~/.config/dunst/dunstrc 
+exec --no-startup-id dbus-launch dunst --config $CONFIG/dunst/dunstrc 
 
 # tray
 exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
@@ -48,10 +48,10 @@ exec --no-startup-id thunar
 exec --no-startup-id thunderbird
 exec --no-startup-id keepassxc
 exec --no-startup-id st -e nvim --listen ~/.cache/nvim/server.pipe +terminal
-exec --no-startup-id sleep 5 && ~/projects/scripts/keyboard.sh
+exec --no-startup-id sleep 5 && $PROJ/scripts/keyboard.sh
 exec --no-startup-id sleep 5 && autokey-gtk
 exec --no-startup-id sleep 5 && warpd
-exec --no-startup-id sleep 7 && ~/projects/scripts/discord_update_launch.sh
+exec --no-startup-id sleep 7 && $PROJ/scripts/discord_update_launch.sh
 
 # Taskbar
 bar {
@@ -148,17 +148,17 @@ bindsym $mod+r                    mode "resize"
 # Custom Keys
 bindsym Print                     exec scrot $HOME/images/%Y%m%d_%H%M%S_screenshot.png -e 'gimp $f'
 bindsym $mod+l                    exec i3lock -e -i $HOME/images/wallpapers/matrimonio.png
-bindsym $mod+d                    exec rofi -terminal st -modi drun -show drun -config ~/.config/rofi/config.rasi
-bindsym $mod+Shift+p              exec ~/.config/i3/scripts/power-profiles
-bindsym $mod+q                    exec ~/.config/i3/scripts/powermenu
+bindsym $mod+d                    exec rofi -terminal st -modi drun -show drun -config $CONFIG/rofi/config.rasi
+bindsym $mod+Shift+p              exec $CONFIG/i3/scripts/power-profiles
+bindsym $mod+q                    exec $CONFIG/i3/scripts/powermenu
 bindsym $mod+p                    exec rofi -modi "clipboard:greenclip print" -show clipboard -run-command '{cmd}'
 bindsym $mod+m                    exec rofi-autorandr -modi drun -show drun
 bindsym $mod+t                    exec rofi-theme-selector
 
 # System keys
-bindsym XF86AudioLowerVolume      exec ~/projects/volume.sh -10% && pkill -RTMIN+1 i3blocks
-bindsym XF86AudioRaiseVolume      exec ~/projects/volume.sh +10% && pkill -RTMIN+1 i3blocks
-bindsym XF86AudioMute             exec ~/projects/mute.sh && pkill -RTMIN+1 i3blocks
+bindsym XF86AudioLowerVolume      exec $PROJ/scripts/volume.sh -10% && pkill -RTMIN+1 i3blocks
+bindsym XF86AudioRaiseVolume      exec $PROJ/scripts/volume.sh +10% && pkill -RTMIN+1 i3blocks
+bindsym XF86AudioMute             exec $PROJ/scripts/mute.sh && pkill -RTMIN+1 i3blocks
 bindsym XF86AudioPlay             exec playerctl play
 bindsym XF86AudioPause            exec playerctl pause
 bindsym XF86AudioNext             exec playerctl next
