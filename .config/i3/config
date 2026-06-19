@@ -34,23 +34,20 @@ exec --no-startup-id dbus-launch dunst --config ~/.config/dunst/dunstrc
 
 # tray
 exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
-exec --no-startup-id greenclip daemon
-exec --no-startup-id blueberry-tray
+exec --no-startup-id clipmenud
+exec --no-startup-id blueman-applet
 exec --no-startup-id maestral start
 exec --no-startup-id nm-applet
 
 # Startup
 exec --no-startup-id nitrogen --restore
 exec --no-startup-id librewolf
-exec --no-startup-id dropbox
 exec --no-startup-id screenkey
 exec --no-startup-id thunar
 exec --no-startup-id thunderbird
 exec --no-startup-id keepassxc
 exec --no-startup-id st -e nvim --listen ~/.cache/nvim/server.pipe +terminal
 exec --no-startup-id sleep 5 && ~/projects/scripts/keyboard.sh
-exec --no-startup-id sleep 5 && autokey-gtk
-exec --no-startup-id sleep 5 && warpd
 exec --no-startup-id sleep 7 && ~/projects/scripts/discord_update_launch.sh
 
 # Taskbar
@@ -147,15 +144,16 @@ bindsym $mod+r                    mode "resize"
 
 # Custom Keys
 bindsym Print                     exec scrot ~/images/%Y%m%d_%H%M%S_screenshot.png -e 'gimp $f'
-bindsym $mod+l                    exec i3lock -e -i ~/images/wallpapers/matrimonio.png
-bindsym $mod+d                    exec rofi -terminal st -modi drun -show drun -config ~/.config/rofi/config.rasi
-bindsym $mod+Shift+p              exec ~/.config/i3/scripts/power-profiles
-bindsym $mod+q                    exec ~/.config/i3/scripts/powermenu
-bindsym $mod+p                    exec rofi -modi "clipboard:greenclip print" -show clipboard -run-command '{cmd}'
-bindsym $mod+m                    exec rofi-autorandr -modi drun -show drun
-bindsym $mod+t                    exec rofi-theme-selector
+bindsym $mod+p                    exec ~/projects/scripts/snippet.py
+bindsym $mod+l                    exec ~/projects/scripts/lock.sh
+bindsym $mod+d                    exec ~/projects/scripts/rofi_choice.sh
+bindsym $mod+Shift+p              exec ~/projects/scripts/power_profiles.sh
+bindsym $mod+q                    exec ~/projects/scripts/power_menu.sh
+bindsym $mod+Shift+e                    exec ~/projects/offmoji/offmoji.sh
 
 # System keys
+bindsym XF86MonBrightnessUp       exec brightnessctl set "10%+" && pkill -RTMIN+10 i3blocks
+bindsym XF86MonBrightnessDown     exec brightnessctl set "10%-" && pkill -RTMIN+10 i3blocks
 bindsym XF86AudioLowerVolume      exec ~/projects/scripts/volume.sh -10% && pkill -RTMIN+1 i3blocks
 bindsym XF86AudioRaiseVolume      exec ~/projects/scripts/volume.sh +10% && pkill -RTMIN+1 i3blocks
 bindsym XF86AudioMute             exec ~/projects/scripts/mute.sh && pkill -RTMIN+1 i3blocks
@@ -163,5 +161,3 @@ bindsym XF86AudioPlay             exec playerctl play
 bindsym XF86AudioPause            exec playerctl pause
 bindsym XF86AudioNext             exec playerctl next
 bindsym XF86AudioPrev             exec playerctl previous
-bindsym XF86MonBrightnessUp       exec xbacklight +5 && notify-send "Brightness - $(xbacklight -get | cut -d '.' -f 1)%"
-bindsym XF86MonBrightnessDown     exec xbacklight -5 && notify-send "Brightness - $(xbacklight -get | cut -d '.' -f 1)%"

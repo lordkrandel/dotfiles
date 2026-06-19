@@ -1,81 +1,85 @@
 vim.lsp.config('ruff', {
     cmd = { 'ruff', 'server' },
     filetypes = { 'python' },
+    root_markers = { 'pyproject.toml', 'ruff.toml', '.ruff.toml', '.git' },
     init_options = {
         settings = {
-            args = {
-                "--select", "ALL", "--preview",
-                "--ignore", ""
-                .. ",ANN"
-                .. ",A"
-                .. ",ARG"
-                .. ",B"
-                .. ",C408"
-                .. ",C420"
-                .. ",C901"
-                .. ",COM812"
-                .. ",CPY001"
-                .. ",D"
-                .. ",DOC"
-                .. ",DTZ"
-                .. ",E266"
-                .. ",E501"
-                .. ",E713"
-                .. ",E741"
-                .. ",EM101"
-                .. ",EM102"
-                .. ",ERA001"
-                .. ",FA100"
-                .. ",FA102"
-                .. ",FBT"
-                .. ",FIX"
-                .. ",FURB101"
-                .. ",FURB118"
-                .. ",FURB152"
-                .. ",I001"
-                .. ",INP001"
-                .. ",N"
-                .. ",PD"
-                .. ",PERF"
-                .. ",PGH003"
-                .. ",PIE790"
-                .. ",PIE808"
-                .. ",PLC2701"
-                .. ",PLR"
-                .. ",PLW2901"
-                .. ",PT"
-                .. ",PTH"
-                .. ",Q"
-                .. ",RET"
-                .. ",RET502"
-                .. ",RET503"
-                .. ",RSE102"
-                .. ",RUF001"
-                .. ",RUF005"
-                .. ",RUF012"
-                .. ",RUF021"
-                .. ",RUF100"
-                .. ",S"
-                .. ",SIM102"
-                .. ",SIM108"
-                .. ",SIM117"
-                .. ",SLF001"
-                .. ",TD"
-                .. ",TID252"
-                .. ",TRY002"
-                .. ",TRY003"
-                .. ",TRY200"
-                .. ",TRY300"
-                .. ",TRY400"
-                .. ",UP006"
-                .. ",UP007"
-                .. ",UP031"
-                .. ",UP038"
+            lint = {
+                preview = true,
+                select = { "ALL" },
+                ignore = {
+                    "ANN",
+                    "A",
+                    "ARG",
+                    "B",
+                    "C408",
+                    "C420",
+                    "C901",
+                    "COM812",
+                    "CPY001",
+                    "D",
+                    "DOC",
+                    "DTZ",
+                    "E266",
+                    "E501",
+                    "E713",
+                    "E741",
+                    "EM101",
+                    "EM102",
+                    "ERA001",
+                    "FA100",
+                    "FA102",
+                    "FBT",
+                    "FIX",
+                    "FURB101",
+                    "FURB118",
+                    "FURB152",
+                    "I001",
+                    "INP001",
+                    "N",
+                    "PD",
+                    "PERF",
+                    "PGH003",
+                    "PIE790",
+                    "PIE808",
+                    "PLC2701",
+                    "PLR",
+                    "PLW2901",
+                    "PT",
+                    "PTH",
+                    "Q",
+                    "RET",
+                    "RET502",
+                    "RET503",
+                    "RSE102",
+                    "RUF001",
+                    "RUF005",
+                    "RUF012",
+                    "RUF021",
+                    "RUF100",
+                    "S",
+                    "SIM102",
+                    "SIM108",
+                    "SIM117",
+                    "SLF001",
+                    "TD",
+                    "TID252",
+                    "TRY002",
+                    "TRY003",
+                    "TRY200",
+                    "TRY300",
+                    "TRY400",
+                    "UP006",
+                    "UP007",
+                    "UP031",
+                    "UP038",
+                }
             }
         }
     }
 })
 vim.lsp.enable('ruff')
+
 
 local function configure_diagnostics()
     -- diagnostics config

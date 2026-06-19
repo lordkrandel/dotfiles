@@ -1,5 +1,21 @@
 #!/usr/bin/bash
 
+timer() {
+    ROOSTER=~/music/rooster.wav
+    KEEPALIVE=5000
+    TITLE=Timer
+
+    if [ -z "$1" ]; then
+        atq | while read -r id d t q u r; do
+            DESC=$(at -c "$id" | grep $TITLE | grep -o "'.*'" | tr -d "'")
+            echo "# $id: $q $t $u $DESC"
+        done
+        return 0
+    fi
+
+    echo "DISPLAY=:0 notify-send \"$TITLE \$(date +%H:%M)\" '$2' -t $KEEPALIVE && mpv $ROOSTER" | at "$1"
+}
+
 qrencode () {
     TEMPFILE=$(mktemp)
     trap "'rm -f $TEMPFILE'" 0 2 3 15
@@ -79,7 +95,11 @@ pgconn() {
 }
 
 ntab() {
-    nvim --server ~/.nvim.pipe --remote-tab $(realpath $1)
+    if [ -z "$1" ]; then
+        nvim --server "$NVIM_PIPE" --remote-send "<C-\><C-N>:tabnew<CR>"
+    else
+        nvim --server "$NVIM_PIPE" --remote-tab "$(realpath "$1")"
+    fi
 }
 
 resetusb() {
@@ -98,11 +118,12 @@ resetusb() {
 
 alias ask="$PROJ/ask/ask.sh $*"
 alias act="activate $*"
-alias blank="clear && clear $*"
+alias blank="clear && clear && reset && reset $*"
 alias bundle="$PROJ/go_bundle/bundle $*"
 alias ccal="cal -mn 3 $*"
 alias dea="deactivate $*"
 alias dir="ll $*"
+alias dropboxsync="rclone bisync Dropbox: ~/Dropbox --resync --verbose --exclude '/.dropbox' --exclude '/.dropbox.cache'"
 alias kv="$PROJ/kv/kv $*"
 alias ll="eza -algo --no-permissions --group-directories-first --time-style=long-iso $*"
 alias cards="$PROJ/cards/cards $*"
@@ -122,8 +143,6 @@ alias rap="rg --no-heading -C 3 --type=py --type=xml $*"
 alias rgg="$PROJ/rgg/rgg.sh $*"
 alias rv="$PROJ/reviewtui/reviewtui.sh $*"
 alias si="yes S"
-alias update-discord="yay -Sy discord --noconfirm $*"
 alias update-pip="pip install --upgrade pip"
-alias tts="$PROJ/scripts/tts.sh $*"
 alias nohist="cat /dev/null > ~/.bash_history && history -c && exit"
 alias jar="$PROJ/scripts/cookiejar.sh $*"

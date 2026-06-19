@@ -26,12 +26,18 @@ bind '"\e[B":history-search-forward'
 
 # COMPLETIONS -----------------------------------------------------
 source /usr/share/bash-completion/completions/git
-source /home/odoo/.fzf/shell/completion.bash
-source /usr/share/fzf-tab-completion/bash/fzf-bash-completion.sh
-bind -x '"\t": fzf_bash_completion'
+source $HOME/.fzf/shell/completion.bash
+source $HOME/.fzf/shell/key-bindings.bash
 
 # FUCK YOU
 export _TYPER_STANDARD_TRACEBACK=1
+
+# NVIM PIPE -------------------------------------------------------
+export NVIM_PIPE=~/.cache/nvim/server.pipe
+
+# PYENV
+export PYENV_ROOT="$HOME/.local/share/pyenv"
+
 
 if [[ $(whoami) != "root" ]]; then
 
@@ -53,5 +59,3 @@ if [[ $(whoami) != "root" ]]; then
     # USER INTERACTION ------------------------------------------------
     source $PROJ/shellrc/shellrc.sh
 fi
-
-# uv
