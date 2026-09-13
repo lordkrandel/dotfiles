@@ -5,7 +5,6 @@ import nre
 
 const Space = "&#8201;"
 
-# --- Audio Backend: PipeWire / PulseAudio (pactl) ---
 proc pactlGetMute(): Option[bool] =
     let (outStr, code) = execCmdEx("pactl get-sink-mute @DEFAULT_SINK@")
     if code == 0: some(outStr.contains("yes")) else: none(bool)
@@ -20,14 +19,12 @@ proc pactlGetVolume(): Option[int] =
     else:
         none(int)
 
-# --- Unified State Resolvers ---
 proc isSystemMuted(): bool =
     pactlGetMute().get(false)
 
 proc getSystemVolume(): int =
     pactlGetVolume().get(0)
 
-# --- Click Actions ---
 proc adjustVolume(delta: string) =
     if not isSystemMuted():
         discard execCmd("pactl set-sink-volume @DEFAULT_SINK@ " & delta)

@@ -5,7 +5,7 @@
 # --------------------------------
 
 # Base config
-font pango: Monofur 10
+font pango: Bahnschrift Light 13
 workspace_layout default
 set $mod Mod4
 floating_modifier $mod
@@ -145,7 +145,7 @@ bindsym $mod+r                    mode "resize"
 bindsym Print                     exec scrot ~/images/%Y%m%d_%H%M%S_screenshot.png -e 'gimp $f'
 bindsym $mod+p                    exec ~/projects/scripts/snippet.py
 bindsym $mod+l                    exec ~/projects/scripts/lock.sh
-bindsym $mod+d                    exec ~/projects/scripts/rofi_choice.sh -n
+bindsym $mod+d                    exec ~/projects/scripts/runner.nim --center -theme ~/projects/scripts/rofi_choice_runner.rasi
 bindsym $mod+Shift+p              exec ~/projects/scripts/power_profiles.sh
 bindsym $mod+q                    exec ~/projects/scripts/power_menu.sh
 bindsym $mod+Shift+e              exec ~/projects/offmoji/offmoji.sh

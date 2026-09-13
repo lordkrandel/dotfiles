@@ -27,7 +27,7 @@ proc spawnRofi() =
     let calFinale = calRighe.join("\n")
 
     let launchCmd = "~/projects/scripts/rofi_choice.nim" &
-        " -theme \"~/projects/dotfiles/.config/rofi_choice_calendar.rasi\"" &
+        " -theme \"~/projects/scripts/rofi_choice_calendar.rasi\"" &
         " Calendario" &
         " \" \"" &
         " \"" & topBarDate & "\"" &
