@@ -1,104 +1,103 @@
+# --------------------------------
+#
+#              i3
+#
+# --------------------------------
+
 # Base config
-font pango: Aporetic Sans Mono 14
+font pango: Monofur 10
 workspace_layout default
 set $mod Mod4
 floating_modifier $mod
 
+# Colors
+set $violet #550055
+set $yellow #ffff77
+
+
 # Workspaces
-set $ws1 "1:  🌍  "
-set $ws2 "2:  💬  "
-set $ws3 "3:  📧𝄢  "
-set $ws4 "4:  ⌨  "
-set $ws5 "5:  🖌️  "
-set $ws6 "6:  📂  "
-set $ws7 "7:  🔑  "
-set $ws8 "8:  "
-set $ws9 "9: "
-set $ws10 "10: "
+set $ws1 "1: web "
+set $ws2 "2: chat "
+set $ws3 "3: mail "
+set $ws4 "4: term "
+set $ws5 "5: notes "
+set $ws6 "6: files "
+set $ws7 "7: pass "
+set $ws8 "8: gimp "
+set $ws9 "9: steam "
 
 # Assign to workspace
-assign [class="(?i)librewolf"]     $ws1
-assign [class="(?i)discord"]       $ws2
-assign [class="(?i)Thunderbird"]   $ws3
-assign [class="(?i)Spotify"]       $ws3
-assign [class="(?i)st"]            $ws4
-assign [class="(?i)gimp"]          $ws5
-assign [class="Thunar"]            $ws6
-assign [class="(?i)keepassxc"]     $ws7
+assign [class="(?i)librewolf-discord"]              $ws2
+assign [class="(?i)librewolf"]                      $ws1
+assign [class="(?i)Spotify"]                        $ws2
+assign [class="(?i)Thunderbird"]                    $ws3
+assign [title="(?i)vifm"]                           $ws6
+assign [class="(?i)st"]                             $ws4
+assign [class="(?i)upnote"]                         $ws5
+assign [class="(?i)Thunar"]                         $ws6
+assign [class="(?i)keepassxc"]                      $ws7
+assign [class="(?i)gimp"]                           $ws8
+assign [class="(?i)steam"]                          $ws9
+assign [title="(?i)VirtualCottage2"]                $ws9
 
-# beep off
-exec --no-startup-id xset b off
+set $float_center floating enable, move position center, focus
+for_window [class="(?i)blueman-manager"]  $float_center
+for_window [class="(?i)float-calendar"]   $float_center
+for_window [class="(?i)pavucontrol"]      $float_center
+# Drag drop from command-line script
+for_window [class="(?i)dragout"]          $float_center
+for_window [class="(?i)dragout"]          sticky enable
 
-# notifications
-exec --no-startup-id dbus-launch dunst --config ~/.config/dunst/dunstrc
+for_window [class="(?i)steam"]            move to workspace $ws9
 
-# tray
-exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
-exec --no-startup-id clipmenud
-exec --no-startup-id blueman-applet
-exec --no-startup-id maestral start
-exec --no-startup-id nm-applet
-
-# Startup
-exec --no-startup-id nitrogen --restore
-exec --no-startup-id librewolf
-exec --no-startup-id screenkey
-exec --no-startup-id thunar
-exec --no-startup-id thunderbird
-exec --no-startup-id keepassxc
-exec --no-startup-id st -e nvim --listen ~/.cache/nvim/server.pipe +terminal
-exec --no-startup-id sleep 5 && ~/projects/scripts/keyboard.sh
-exec --no-startup-id sleep 7 && ~/projects/scripts/discord_update_launch.sh
 
 # Taskbar
 bar {
-    font pango: Aporetic Sans Mono 14
-    status_command i3blocks -c ~/.config/i3/i3blocks.conf
+    font pango:Luxurious Script 34
     position bottom
+    height 60
     tray_output primary
-    padding 4px 0px 0px 0px
     strip_workspace_numbers yes
+    status_command i3blocks -c ~/.config/i3/i3blocks.conf
     colors {
-        separator          $purple
-        background         $darkgrey
-        statusline         $white
-        focused_workspace  $mediumgrey   $grey       $darkgrey  $purple
-        active_workspace   $lightblue    $mediumgrey $darkgrey  $purple
-        inactive_workspace $darkgrey     $darkgrey   $grey      $purple
-        urgent_workspace   $urgentred    $urgentred  $white     $purple
-    }}
+        background          $violet
+        statusline          $white
+        inactive_workspace  $violet  $violet  $grey    $purple
+        urgent_workspace    $violet  $violet  $yellow  $purple
+    }
+}
 
 mode "resize" {
-    bindsym h     resize grow   width  5 px or 1 ppt
-    bindsym l     resize shrink width  5 px or 1 ppt
-    bindsym j     resize grow   height 5 px or 1 ppt
-    bindsym k     resize shrink height 5 px or 1 ppt
-    bindsym Left  resize grow   width  5 px or 1 ppt
-    bindsym Right resize shrink width  5 px or 1 ppt
-    bindsym Down  resize shrink height 5 px or 1 ppt
-    bindsym Up    resize grow   height 5 px or 1 ppt
-    bindsym Return mode "default"
-    bindsym Escape mode "default"
+    bindsym h       resize grow   width  5 px or 1 ppt
+    bindsym l       resize shrink width  5 px or 1 ppt
+    bindsym j       resize grow   height 5 px or 1 ppt
+    bindsym k       resize shrink height 5 px or 1 ppt
+    bindsym Left    resize grow   width  5 px or 1 ppt
+    bindsym Right   resize shrink width  5 px or 1 ppt
+    bindsym Down    resize shrink height 5 px or 1 ppt
+    bindsym Up      resize grow   height 5 px or 1 ppt
+    bindsym Return  mode "default"
+    bindsym Escape  mode "default"
 }
 
 # Colors
-set $darkbluetrans                #08052b
-set $darkblue                     #08052b
-set $lightblue                    #5294e2
-set $urgentred                    #e53935
-set $white                        #ffffff
-set $black                        #000000
-set $purple                       #e345ff
-set $darkgrey                     #383c4a
-set $grey                         #b0b5bd
-set $mediumgrey                   #8b8b8b
-set $yellowbrown                  #e1b700
+set $darkbluetrans  #08052b
+set $darkblue       #08052b
+set $lightblue      #5294e2
+set $urgentred      #e53935
+set $white          #ffffff
+set $black          #000000
+set $purple         #e345ff
+set $darkgrey       #383c4a
+set $grey           #b0b5bd
+set $mediumgrey     #8b8b8b
+set $yellowbrown    #e1b700
 
-#class                            border      bground     text     indicator     child_border
-client.focused                    $black      $darkblue   $white   $mediumgrey   $black
-client.unfocused                  $black      $darkblue   $grey    $darkgrey     $black
-client.focused_inactive           $black      $darkblue   $grey    $black        $black
-client.urgent                     $urgentred  $urgentred  $white   $yellowbrown  $black
+#class                   border      bground     text     indicator     child_border
+client.focused           $black      $darkblue   $white   $mediumgrey   $black
+client.unfocused         $black      $darkblue   $grey    $darkgrey     $black
+client.focused_inactive  $black      $darkblue   $grey    $black        $black
+client.urgent            $urgentred  $urgentred  $white   $yellowbrown  $black
 
 # Workspace keys
 bindsym $mod+1                    workspace $ws1
@@ -146,18 +145,21 @@ bindsym $mod+r                    mode "resize"
 bindsym Print                     exec scrot ~/images/%Y%m%d_%H%M%S_screenshot.png -e 'gimp $f'
 bindsym $mod+p                    exec ~/projects/scripts/snippet.py
 bindsym $mod+l                    exec ~/projects/scripts/lock.sh
-bindsym $mod+d                    exec ~/projects/scripts/rofi_choice.sh
+bindsym $mod+d                    exec ~/projects/scripts/rofi_choice.sh -n
 bindsym $mod+Shift+p              exec ~/projects/scripts/power_profiles.sh
 bindsym $mod+q                    exec ~/projects/scripts/power_menu.sh
-bindsym $mod+Shift+e                    exec ~/projects/offmoji/offmoji.sh
+bindsym $mod+Shift+e              exec ~/projects/offmoji/offmoji.sh
 
 # System keys
 bindsym XF86MonBrightnessUp       exec brightnessctl set "10%+" && pkill -RTMIN+10 i3blocks
 bindsym XF86MonBrightnessDown     exec brightnessctl set "10%-" && pkill -RTMIN+10 i3blocks
 bindsym XF86AudioLowerVolume      exec ~/projects/scripts/volume.sh -10% && pkill -RTMIN+1 i3blocks
 bindsym XF86AudioRaiseVolume      exec ~/projects/scripts/volume.sh +10% && pkill -RTMIN+1 i3blocks
-bindsym XF86AudioMute             exec ~/projects/scripts/mute.sh && pkill -RTMIN+1 i3blocks
+bindsym XF86AudioMute             exec ~/projects/scripts/mute.nim && pkill -RTMIN+1 i3blocks
 bindsym XF86AudioPlay             exec playerctl play
 bindsym XF86AudioPause            exec playerctl pause
 bindsym XF86AudioNext             exec playerctl next
 bindsym XF86AudioPrev             exec playerctl previous
+
+# Startup
+exec --no-startup-id ~/projects/scripts/startup.sh

@@ -1,3 +1,4 @@
+vim.g.plug_url_format = 'https://git::@github.com/%s.git'
 vim.call('plug#begin')
 local Plug = vim.fn['plug#']
 
@@ -15,6 +16,8 @@ local Plug = vim.fn['plug#']
 	Plug 'nvim-lualine/lualine.nvim'
 
 	-- editing ----------------------
+    -- align
+    Plug 'echasnovski/mini.align'
 	-- comment selected lines
 	Plug 'tpope/vim-commentary'
     -- surround sections with characters
@@ -38,6 +41,7 @@ local Plug = vim.fn['plug#']
 	-- lua library for coroutines
 	Plug 'nvim-lua/plenary.nvim'
     Plug "Vimjas/vim-python-pep8-indent"
+    Plug 'zah/nim.vim'
 
     -- Terminal ---------------------
     Plug 'willothy/flatten.nvim'

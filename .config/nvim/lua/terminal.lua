@@ -1,10 +1,9 @@
 require("flatten").setup({
     window = {
-        open = "tab", -- Forces all nested opens to be new tabs
+        open = "tab",
     },
 })
 
--- Hotkeys
 map.t("<esc>", "<C-\\><C-n>")
 map.t("<C-PageUp>", "<C-\\><C-n><C-PageUp>")
 map.t("<C-PageDown>", "<C-\\><C-n><C-PageDown>")
@@ -19,26 +18,30 @@ vim.api.nvim_create_autocmd({ "TermOpen", "BufEnter" }, {
 
 -- git will not be able to read the file we're editing if we delete the tempfile
 -- as soon as the buffer closes, so we delay it a bit
-local terminal_auto_close_group = vim.api.nvim_create_augroup("TerminalAutoCloseHidden", { clear = true })
+local terminal_auto_close_group =
+vim.api.nvim_create_augroup("TerminalAutoCloseHidden", { clear = true })
+
 vim.api.nvim_create_autocmd("BufHidden", {
     group = terminal_auto_close_group,
     pattern = "*",
     callback = function(args)
         local buf = args.buf
-        if vim.bo[buf].buftype == "terminal" then
-            vim.schedule(function()
-                -- Check if the buffer is still valid AND no window is currently displaying it.
-                -- BufHidden means no window is displaying it, but this check is for safety.
-                local buf_info = vim.fn.getbufinfo(buf)[1]
-                if vim.api.nvim_buf_is_valid(buf) and buf_info and #buf_info.windows == 0 then
-                    -- Delete the buffer (kills the process)
-                    vim.api.nvim_buf_delete(buf, { force = true })
-                end
-            end)
-        end
+        if vim.bo[buf].buftype ~= "terminal" then return end
+
+        vim.schedule(function()
+            if not vim.api.nvim_buf_is_valid(buf) then return end
+
+            local job = vim.b[buf].terminal_job_id
+            if job and vim.fn.jobwait({ job }, 0)[1] == -1 then return end
+
+            local info = vim.fn.getbufinfo(buf)[1]
+            if info and #info.windows == 0 then
+                vim.api.nvim_buf_delete(buf, { force = true })
+            end
+        end)
     end,
-    desc = "Safely delete hidden terminal buffer.",
 })
+
 
 -- Autocomplete in terminal, requires fzf
 map.t('<C-p>', function()

@@ -6,6 +6,7 @@ end, vim.opt.isfname:get())
 vim.opt.whichwrap:append("<,>,[,]")
 
 -- tab settings
+vim.opt.tabclose = "left"
 vim.opt.expandtab = true
 vim.opt.shiftwidth = 4
 vim.opt.tabstop = 4
@@ -29,6 +30,7 @@ vim.opt.colorcolumn = "121"
 vim.opt.cursorline = true
 vim.opt.listchars = "eol:$,tab:>-,lead:·,space:·,extends:>,precedes:<"
 vim.opt.list = true
+vim.opt.textwidth = 120
 
 -- set highlight line
 vim.api.nvim_set_hl(0, "LineNr", {fg = "#AA7777"})
@@ -74,3 +76,21 @@ require("nvim-surround").setup()
 -- delete buffer on window close
 vim.cmd('command! BufOnly execute \'%bdelete|edit #|normal `"')
 
+-- turn .. into .* when searchin
+vim.keymap.set('c', '..', function()
+    local cmd_type = vim.fn.getcmdtype()
+    if cmd_type == '/' or cmd_type == '?' then
+        return '.*'
+    end
+    return '..'
+end, { expr = true })
+
+vim.keymap.set('c', '.f', function()
+    local cmd_type = vim.fn.getcmdtype()
+    if cmd_type == '/' or cmd_type == '?' then
+        return 'def .*(<left><left><left>'
+    end
+    return '.f'
+end, { expr = true })
+
+require('mini.align').setup()

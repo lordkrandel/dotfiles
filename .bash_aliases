@@ -1,4 +1,17 @@
-#!/usr/bin/bash
+# --------------------------------
+#
+#         .bash_aliases
+#
+# --------------------------------
+
+
+cd() {
+    builtin cd "$@" || return
+    if [[ -f .description ]]; then
+        ~/projects/lld/lld
+    fi
+}
+
 
 timer() {
     ROOSTER=~/music/rooster.wav
@@ -15,6 +28,7 @@ timer() {
 
     echo "DISPLAY=:0 notify-send \"$TITLE \$(date +%H:%M)\" '$2' -t $KEEPALIVE && mpv $ROOSTER" | at "$1"
 }
+
 
 qrencode () {
     TEMPFILE=$(mktemp)
@@ -94,55 +108,36 @@ pgconn() {
         ;"
 }
 
-ntab() {
-    if [ -z "$1" ]; then
-        nvim --server "$NVIM_PIPE" --remote-send "<C-\><C-N>:tabnew<CR>"
-    else
-        nvim --server "$NVIM_PIPE" --remote-tab "$(realpath "$1")"
-    fi
-}
-
-resetusb() {
-    local HCD="/sys/bus/pci/drivers/xhci_hcd"
-    for dev in $HCD/*:*:*.*; do
-        if [ -e "$dev" ]; then
-            local pci_id=$(basename "$dev")
-            echo "Resetting USB controller: $pci_id"
-            echo -n "$pci_id" | sudo tee $HCD/unbind > /dev/null
-            sleep 1
-            echo -n "$pci_id" | sudo tee $HCD/bind > /dev/null
-        fi
-        done
-    echo "USB controllers reset."
-}
-
+alias ali="$EDITOR ~/.bash_aliases"
 alias ask="$PROJ/ask/ask.sh $*"
 alias act="activate $*"
+alias bat="bat --wrap never $*"
 alias blank="clear && clear && reset && reset $*"
 alias bundle="$PROJ/go_bundle/bundle $*"
 alias ccal="cal -mn 3 $*"
+alias cards="$PROJ/cards/cards $*"
+alias clip="xclip -sel clipboard $*"
 alias dea="deactivate $*"
 alias dir="ll $*"
+alias ll="ls -al --color=auto $*"
+alias lw="$PROJ/scripts/open_with_librewolf.sh $*"
 alias dropboxsync="rclone bisync Dropbox: ~/Dropbox --resync --verbose --exclude '/.dropbox' --exclude '/.dropbox.cache'"
-alias kv="$PROJ/kv/kv $*"
-alias ll="eza -algo --no-permissions --group-directories-first --time-style=long-iso $*"
-alias cards="$PROJ/cards/cards $*"
+alias hw="hardinfo2 $*"
 alias monitor="$PROJ/scripts/monitor.sh $*"
 alias noswap="rm ~/.local/state/nvim/swap/* $*"
 alias note="nvim +':normal! Go' +startinsert $NOTES"
 alias notes="tail $* $NOTES"
 alias is_repo="$PROJ/scripts/is_repo.py $*"
 alias rankmirrors="eos-rankmirrors -t 2"
-alias pac="(deactivate && si | sudo pacman -Sy endeavouros-keyring && si | sudo pacman -Su $* && si | sudo pacman -Scc)"
+alias pacclean="sudo pacman -Rns \$(pacman -Qdtq)"
 alias pg="pgcli $*"
 alias pl="$PROJ/pl/pl $*"
 alias py="ipython $*"
 alias realias=". ~/.bash_aliases $*"
 alias reload=". ~/.bashrc $*"
-alias rap="rg --no-heading -C 3 --type=py --type=xml $*"
-alias rgg="$PROJ/rgg/rgg.sh $*"
-alias rv="$PROJ/reviewtui/reviewtui.sh $*"
+alias rap="rg --no-heading -C 3 --type=py --type=xml --color=always $*"
 alias si="yes S"
 alias update-pip="pip install --upgrade pip"
 alias nohist="cat /dev/null > ~/.bash_history && history -c && exit"
 alias jar="$PROJ/scripts/cookiejar.sh $*"
+alias wat="$PROJ/wat/wat.sh $*"

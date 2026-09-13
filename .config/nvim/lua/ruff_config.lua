@@ -23,6 +23,7 @@ vim.lsp.config('ruff', {
                     "E266",
                     "E501",
                     "E713",
+                        "E731",
                     "E741",
                     "EM101",
                     "EM102",
@@ -83,12 +84,23 @@ vim.lsp.enable('ruff')
 
 local function configure_diagnostics()
     -- diagnostics config
-    local diagnostic_fmt = function(diagnostic)
-        return string.format('%s - %s', diagnostic.code, diagnostic.message)
-    end
+    local ok, ruff_slug_to_code_map = pcall(require, "ruff_rules")
+    if not ok then ruff_slug_to_code_map = {} end
     vim.diagnostic.config({
-        virtual_text = {format = diagnostic_fmt},
-        float = false,
+        virtual_text = {
+            format = function(diagnostic)
+                if diagnostic.source and string.lower(diagnostic.source):match("ruff") then
+                    local slug = diagnostic.code
+                    if not slug then return diagnostic.message end
+                    local short_code = ruff_slug_to_code_map[slug]
+                    if short_code then
+                        return string.format("%s %s - %s", short_code, slug, diagnostic.message)
+                    end
+                    return string.format("%s %s", slug, diagnostic.message)
+                end
+                return diagnostic.message
+            end
+        },
     })
     vim.api.nvim_create_autocmd("FileType", {
         pattern = "qf",

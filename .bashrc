@@ -1,3 +1,9 @@
+# --------------------------------
+#
+#            .bashrc
+#
+# --------------------------------
+
 [[ $- != *i* ]] && return
 
 command_not_found_handle() {
@@ -11,9 +17,9 @@ command_not_found_handle() {
     fi
 }
 
-# ENV --------------------------------------------------------------
-export BROWSER=librewolf
-export EDITOR=nvim
+# ENV -------------------------------------------------------------
+export BROWSER=~/projects/scripts/open_with_librewolf.sh
+export EDITOR=edit
 export LC_COLLATE="C"
 export LS_COLORS=$LS_COLORS:'ow=1;34:'
 export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
@@ -29,7 +35,7 @@ source /usr/share/bash-completion/completions/git
 source $HOME/.fzf/shell/completion.bash
 source $HOME/.fzf/shell/key-bindings.bash
 
-# FUCK YOU
+# FUCK YOU --------------------------------------------------------
 export _TYPER_STANDARD_TRACEBACK=1
 
 # NVIM PIPE -------------------------------------------------------
@@ -37,25 +43,26 @@ export NVIM_PIPE=~/.cache/nvim/server.pipe
 
 # PYENV
 export PYENV_ROOT="$HOME/.local/share/pyenv"
-
+[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init - bash)"
 
 if [[ $(whoami) != "root" ]]; then
 
-    # FOLDERS ---------------------------------------------------------
+    # FOLDERS -----------------------------------------------------
     export PROJ=$HOME/projects
     export NEW=$HOME/new
     export WORK=$HOME/work
     export XDG_CONFIG_DIR=$HOME/.config
     export CONFIG=$HOME/.config
 
-    # APPS ------------------------------------------------------------
+    # APPS --------------------------------------------------------
     export NOTES=$HOME/notes.md
 
-    # USER COMPLETIONS ------------------------------------------------
+    # USER COMPLETIONS --------------------------------------------
     source ~/.bash_aliases
     source ~/.fzf.bash
     source ~/.bash_completions/ocli.sh
 
-    # USER INTERACTION ------------------------------------------------
+    # USER INTERACTION --------------------------------------------
     source $PROJ/shellrc/shellrc.sh
 fi

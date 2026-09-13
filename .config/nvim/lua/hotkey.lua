@@ -1,18 +1,7 @@
--- Fast files
-map.n("<A-1>", ":exe 'e " .. config .. "/nvim/init.lua'<CR>")
-map.n("<A-2>", ":e " .. home .. "/.bashrc<CR>")
-map.n("<A-3>", ":e " .. home .. "/bin/st/config.h<CR>")
-map.n("<A-4>", ":e " .. config .. "/i3/config<CR>")
-map.n("<A-5>", ":e " .. home .. "/.bash_aliases<CR>")
-map.n("<A-6>", ":e " .. home .. "/notes.md<CR>")
-map.n("<A-7>",
-    ":silent! cd " .. universe .. "/odoo<CR>"
-    .. ":e " .. universe .. "/odoo<CR>"
-)
-map.n("<A-8>",
-    ":silent! cd " .. universe .. "/enterprise<CR>"
-    .. ":e " .. universe .. "/enterprise<CR>"
-)
+vim.keymap.set("v", "^", ":s/\\s\\+$//e<CR>:noh<CR>", {
+    desc = "Remove trailing whitespace in selection and clear highlight",
+    silent = true,
+})
 
 -- History move
 map.n("<A-left>", "<C-o>")
@@ -40,7 +29,7 @@ map.n("<C-up>", "<C-a>")
 map.n("<C-down>", "<C-x>")
 
 -- Open link in browser
-map.v("<leader>link", '"+y:silent !librewolf --new-tab <C-r>+<cr>')
+map.v("<leader>link", '"+y:silent !~/bin/librewolf/librewolf.AppImage --new-tab <C-r>+<cr>')
 
 -- Copy filename
 map.n("<leader>yf", ":let @+ = expand('%:p')<cr>")
